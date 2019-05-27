@@ -11,9 +11,8 @@ namespace egocircle_utils
         scan(scan),
         depths(scan->ranges),
         indexer(depths.size()),
-        egocircle_radius(scan->range_max-ego_circle::EgoCircleROS::OFFSET)
+        egocircle_radius(scan->range_max-ego_circle::EgoCircleROS::OFFSET) //NOTE: specified radius of scan is larger than the egocircle radius so that the border of the egocircle is visible
       {
-
       }
       
       bool isValid() const
