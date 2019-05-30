@@ -52,8 +52,9 @@
   <build_depend>egocircle</build_depend>
   <build_export_depend>egocircle</build_export_depend>
   <exec_depend>egocircle</exec_depend>
-
-
+  <depend>pips_trajectory_testing</depend>
+  <depend>sensor_msgs</depend>
+  
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- Other tools can request additional information be placed here -->

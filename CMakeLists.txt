@@ -9,6 +9,8 @@ project(egocircle_utils)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   egocircle
+  pips_trajectory_testing
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -102,8 +104,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES egocircle_utils
-  CATKIN_DEPENDS egocircle
+  LIBRARIES interface_updater
+  CATKIN_DEPENDS egocircle pips_trajectory_testing
 #  DEPENDS system_lib
 )
 
@@ -114,9 +116,16 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
+
+add_library(interface_updater src/interface_updater.cpp)
+add_dependencies(interface_updater ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(interface_updater
+  ${catkin_LIBRARIES}
+)
+target_compile_options(interface_updater PUBLIC -std=c++11)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

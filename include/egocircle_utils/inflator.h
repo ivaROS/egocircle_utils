@@ -43,6 +43,21 @@ namespace egocircle_utils
         }
       }
       
+      const std::vector<float>& getDepths() const
+      {
+        return inflated_depths_;
+      }
+      
+      float getInflationRadius() const
+      {
+        return inflation_radius_;
+      }
+      
+      const Container& getContainer() const
+      {
+        return container_;
+      }
+      
     private:
       const Container& container_;
       float inflation_radius_;
