@@ -45,6 +45,8 @@ namespace egocircle_utils
         
         decimated_scan->points.push_back(point_msg);
       }
+      
+      return decimated_scan;
     }
     
     const std::vector<ego_circle::EgoCircularPoint>& getPoints() const
