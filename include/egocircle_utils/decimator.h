@@ -130,6 +130,10 @@ namespace egocircle_utils
         current_angle += angle_increment;
         
       }
+      if(prev_point.r>0)
+      {
+        points.push_back(prev_point);
+      }
       
       return points;
     }
