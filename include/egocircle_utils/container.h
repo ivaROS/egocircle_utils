@@ -20,7 +20,8 @@ namespace egocircle_utils
         return depths.size()>0;
       }
       
-      float getRange(ego_circle::EgoCircularPoint point) const
+      template <typename T>
+      float getRange(T point) const
       {
         int target_ind = indexer.getIndex(point);
         if(target_ind <depths.size())

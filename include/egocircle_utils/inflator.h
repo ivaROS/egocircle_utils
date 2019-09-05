@@ -29,7 +29,8 @@ namespace egocircle_utils
         return inflated_scan;
       }
       
-      float getRange(ego_circle::EgoCircularPoint point) const
+      template<typename T>
+      float getRange(T point) const
       {
         int target_ind = container_.indexer.getIndex(point);
         if(target_ind <inflated_depths_.size())

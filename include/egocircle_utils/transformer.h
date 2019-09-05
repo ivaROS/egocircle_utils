@@ -67,8 +67,25 @@ namespace egocircle_utils
       }
     }
     
+    std::string getLocalFrameId()
+    {
+      return transform_msg_.header.frame_id;
+    }
+    
+    std::string getGlobalFrameId()
+    {
+      return transform_msg_.child_frame_id;
+    }
+    
+    ros::Time getStamp()
+    {
+      return transform_msg_.header.stamp;
+    }
+    
     void setTransform(const geometry_msgs::TransformStamped& transform)
     {
+      transform_msg_ = transform;
+      
       current_transform_ = ego_circle::SE2Transform(transform);
       
       tf2::Stamped<tf2::Transform> tf2_trans;
@@ -96,7 +113,7 @@ namespace egocircle_utils
   private:
     
     ego_circle::SE2Transform current_transform_, inv_current_transform_;
-    
+    geometry_msgs::TransformStamped transform_msg_;
 
   };
 
