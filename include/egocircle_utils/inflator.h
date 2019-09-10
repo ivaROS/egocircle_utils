@@ -16,7 +16,7 @@ namespace egocircle_utils
       {
         if(container_.isValid())
         {
-          inflated_depths_ = inflate(container_, converter_, inflation_radius_);
+          inflated_depths_ = inflate(container_, converter_, inflation_radius_, inflated_point_inds_);
         }
       }
       
@@ -49,6 +49,11 @@ namespace egocircle_utils
         return inflated_depths_;
       }
       
+      const std::vector<int>& getInds() const
+      {
+        return inflated_point_inds_;
+      }
+      
       float getInflationRadius() const
       {
         return inflation_radius_;
@@ -64,7 +69,55 @@ namespace egocircle_utils
       float inflation_radius_;
       ego_circle::EgoCircleWidthConverter converter_;
       std::vector<float> inflated_depths_;
+      std::vector<int> inflated_point_inds_;
 
+      static std::vector<float> inflate(const Container& container, const ego_circle::EgoCircleWidthConverter& converter, float inflation_radius, std::vector<int>& inflated_point_inds)
+      {
+        ros::WallTime start = ros::WallTime::now();
+        std::vector<float> inflated_depths = container.depths; //(depths.size());
+        const std::vector<float>& depths = container.depths;
+        float egocircle_radius = container.egocircle_radius;
+        
+        inflated_point_inds.resize(depths.size(), -1);
+        std::vector<int> ns(depths.size());
+        for(int i = 0; i < depths.size(); i++)
+        {
+          ns[i] = converter.getN(depths[i]);
+        }
+        int n;
+        for(int i = 0; i < depths.size(); i++)
+        {
+          n = ns[i];
+          
+          for(int j = i - n; j < i + n; j++)
+          {
+            int ind = (j <0) ? depths.size() + j : ((j >= depths.size()) ? j - depths.size() : j );
+            float cur_inf_depth = inflated_depths[ind];
+            float new_inf_depth = depths[i] -inflation_radius;
+            if(new_inf_depth < cur_inf_depth)
+            {
+              inflated_depths[ind] = new_inf_depth;
+              inflated_point_inds[ind] = ind;
+            }
+            //inflated_depths[ind] = std::min(depths[i] -inflation_radius,inflated_depths[ind]);
+          }
+          
+        }
+        
+        for(int i = 0; i < depths.size(); i++)
+        {
+          if(inflated_depths[i] == egocircle_radius - inflation_radius)
+          {
+            inflated_depths[i] = egocircle_radius;
+          }
+        }
+        
+        ROS_DEBUG_STREAM_NAMED("timing", "Time to inflate=" << (ros::WallTime::now()-start).toSec()*1000 << "ms");
+        
+        return inflated_depths;
+      }
+      
+      
       static std::vector<float> inflate(const Container& container, const ego_circle::EgoCircleWidthConverter& converter, float inflation_radius)
       {
         ros::WallTime start = ros::WallTime::now();

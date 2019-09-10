@@ -13,6 +13,12 @@ namespace egocircle_utils
         indexer(depths.size()),
         egocircle_radius(scan->range_max-ego_circle::EgoCircleROS::OFFSET) //NOTE: specified radius of scan is larger than the egocircle radius so that the border of the egocircle is visible
       {
+        ego_circle::LaserScanWrapper it_scan(*scan);
+        
+        for(auto pnt : it_scan)
+        {
+          points.push_back(pnt);
+        }
       }
       
       bool isValid() const
@@ -37,8 +43,9 @@ namespace egocircle_utils
       
       sensor_msgs::LaserScan::ConstPtr scan;
       const std::vector<float>& depths;
-      float egocircle_radius;
+      std::vector<ego_circle::PolarPoint> points;
       ego_circle::EgoCircleIndexer indexer;
+      float egocircle_radius;
     };
 
 } //namespace
