@@ -108,7 +108,7 @@ namespace egocircle_utils
             if(new_inf_depth < cur_inf_depth)
             {
               inflated_depths[ind] = new_inf_depth;
-              inflated_point_inds[ind] = ind;
+              inflated_point_inds[ind] = i;
             }
             //inflated_depths[ind] = std::min(depths[i] -inflation_radius,inflated_depths[ind]);
           }
