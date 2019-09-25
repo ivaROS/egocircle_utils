@@ -78,11 +78,16 @@ namespace egocircle_utils
         const std::vector<float>& depths = container.depths;
         float egocircle_radius = container.egocircle_radius;
         
+        double ANGULAR_RESOL = container.indexer.scale; // 0.0122718463;
+        
         inflated_point_inds.resize(depths.size(), -1);
         std::vector<int> ns(depths.size());
         for(int i = 0; i < depths.size(); i++)
         {
-          ns[i] = converter.getN(depths[i]);
+          if(depths[i]!=egocircle_radius)
+          {
+            ns[i] = converter.getN(depths[i]);
+          }
         }
         int n;
         for(int i = 0; i < depths.size(); i++)
@@ -92,8 +97,14 @@ namespace egocircle_utils
           for(int j = i - n; j < i + n; j++)
           {
             int ind = (j <0) ? depths.size() + j : ((j >= depths.size()) ? j - depths.size() : j );
+            
+            float b = depths[i]*depths[i];
+            double cosC = cos((j - i) / ANGULAR_RESOL);
+            float determinant = (4.0 * b * cosC*cosC) - 4 * (b - inflation_radius*inflation_radius);
+            determinant = std::max(0.0f,determinant);
+            float val = (2 * depths[i] * cosC - sqrt(determinant)) / 2;
             float cur_inf_depth = inflated_depths[ind];
-            float new_inf_depth = depths[i] -inflation_radius;
+            float new_inf_depth = val; //depths[i] -inflation_radius;
             if(new_inf_depth < cur_inf_depth)
             {
               inflated_depths[ind] = new_inf_depth;
