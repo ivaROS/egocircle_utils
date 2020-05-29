@@ -1,7 +1,8 @@
 #ifndef EGOCIRCLE_UTILS_INTERFACE_UPDATER_H
 #define EGOCIRCLE_UTILS_INTERFACE_UPDATER_H
 
-#include <pips_trajectory_testing/pips_cc_wrapper.h>
+#include <tf2_utils/transform_manager.h>
+#include <tf2_ros/message_filter.h>
 #include <message_filters/subscriber.h>
 #include <egocircle_utils/updateable_interface.h>
 
