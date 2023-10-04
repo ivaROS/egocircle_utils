@@ -29,7 +29,7 @@ namespace egocircle_utils
       template <typename T>
       float getRange(T point) const
       {
-        unsigned int target_ind = indexer.getIndex(point);
+        int target_ind = indexer.getIndex(point);
         if(target_ind <depths.size())
         {
           return depths[target_ind];

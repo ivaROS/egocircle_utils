@@ -8,10 +8,9 @@ project(egocircle_utils)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  #egocircle
+  egocircle
   pips_trajectory_testing
   sensor_msgs
-  #tf2_utils
 )
 
 ## System dependencies are found with CMake's conventions
@@ -106,7 +105,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES interface_updater
-  CATKIN_DEPENDS egocircle pips_trajectory_testing #tf2_utils
+  CATKIN_DEPENDS egocircle pips_trajectory_testing
 #  DEPENDS system_lib
 )
 

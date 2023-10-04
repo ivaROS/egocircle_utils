@@ -32,7 +32,7 @@ namespace egocircle_utils
       template<typename T>
       float getRange(T point) const
       {
-        unsigned int target_ind = container_.indexer.getIndex(point);
+        int target_ind = container_.indexer.getIndex(point);
         if(target_ind <inflated_depths_.size())
         {
           return inflated_depths_[target_ind];
@@ -80,16 +80,9 @@ namespace egocircle_utils
         
         double ANGULAR_RESOL = container.indexer.scale; // 0.0122718463;
         
-        unsigned int num_depths = depths.size();
-        if(num_depths > (unsigned int)(std::numeric_limits<int>::max()))
-        {
-          ROS_ERROR_STREAM("The size of the depth array is too big for type 'int'! This should never happen");
-        }
-        int num_depths_signed = int(num_depths);
-        
-        inflated_point_inds.resize(num_depths, -1);
-        std::vector<int> ns(num_depths);
-        for(unsigned int i = 0; i < num_depths; i++)
+        inflated_point_inds.resize(depths.size(), -1);
+        std::vector<int> ns(depths.size());
+        for(int i = 0; i < depths.size(); i++)
         {
           if(depths[i]!=egocircle_radius)
           {
@@ -97,13 +90,13 @@ namespace egocircle_utils
           }
         }
         int n;
-        for(int i = 0; i < num_depths_signed; i++)
+        for(int i = 0; i < depths.size(); i++)
         {
           n = ns[i];
           
           for(int j = i - n; j < i + n; j++)
           {
-            int ind = (j <0) ? num_depths_signed + j : ((j >= num_depths_signed) ? j - num_depths_signed : j );
+            int ind = (j <0) ? depths.size() + j : ((j >= depths.size()) ? j - depths.size() : j );
             
             float b = depths[i]*depths[i];
             double cosC = cos((j - i) / ANGULAR_RESOL);
@@ -122,7 +115,7 @@ namespace egocircle_utils
           
         }
         
-        for(unsigned int i = 0; i < num_depths; i++)
+        for(int i = 0; i < depths.size(); i++)
         {
           if(inflated_depths[i] == egocircle_radius - inflation_radius)
           {
@@ -143,32 +136,25 @@ namespace egocircle_utils
         const std::vector<float>& depths = container.depths;
         float egocircle_radius = container.egocircle_radius;
         
-        unsigned int num_depths = depths.size();
-        if(num_depths > (unsigned int)(std::numeric_limits<int>::max()))
-        {
-          ROS_ERROR_STREAM("The size of the depth array is too big for type 'int'! This should never happen");
-        }
-        int num_depths_signed = int(num_depths);
-        
-        std::vector<int> ns(num_depths);
-        for(unsigned int i = 0; i < num_depths; i++)
+        std::vector<int> ns(depths.size());
+        for(int i = 0; i < depths.size(); i++)
         {
           ns[i] = converter.getN(depths[i]);
         }
         int n;
-        for(int i = 0; i < num_depths_signed; i++)
+        for(int i = 0; i < depths.size(); i++)
         {
           n = ns[i];
           
           for(int j = i - n; j < i + n; j++)
           {
-            int ind = (j <0) ? num_depths_signed + j : ((j >= num_depths_signed) ? j - num_depths_signed : j );
+            int ind = (j <0) ? depths.size() + j : ((j >= depths.size()) ? j - depths.size() : j );
             inflated_depths[ind] = std::min(depths[i] -inflation_radius,inflated_depths[ind]);
           }
           
         }
         
-        for(unsigned int i = 0; i < num_depths; i++)
+        for(int i = 0; i < depths.size(); i++)
         {
           if(inflated_depths[i] == egocircle_radius - inflation_radius)
           {
